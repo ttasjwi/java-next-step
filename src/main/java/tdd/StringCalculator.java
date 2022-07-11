@@ -1,8 +1,24 @@
 package tdd;
 
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class StringCalculator {
+
+    private static final String DEFAULT_WORD_SPLIT_DELIMITER = "[,:]";
+
+    /**
+     * 문자열이 주어지면 구분자로 분리하고 리스트로 반환.
+     * - 디폴트 : , 또는 :로 분리
+     * - //문자\n : 지정 문자로 분리
+     */
+    public List<String> splitWords(String str) {
+        if (Objects.isNull(str) || str.isBlank()) {
+            return new ArrayList<>();
+        }
+        return Arrays.stream(str.split(DEFAULT_WORD_SPLIT_DELIMITER))
+                .collect(Collectors.toList());
+    }
 
     /**
      * 문자열을 숫자로 변환한다.
