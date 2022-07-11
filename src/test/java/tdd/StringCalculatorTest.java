@@ -20,19 +20,19 @@ class StringCalculatorTest {
     }
 
     @Nested
-    @DisplayName("add 메서드는")
-    class testAdd {
+    @DisplayName("parseNonNegativeInteger 메서드는")
+    class test_parseNonNegativeInteger {
 
-        private String text;
+        private String str;
 
         @Test
         @DisplayName("null -> 0 반환")
         public void nullTest() {
             // given
-            text = null;
+            str = null;
 
             // when
-            int result = strCal.add(text);
+            int result = strCal.parseNonNegativeInteger(str);
 
             // then
             assertThat(result).isEqualTo(0);
@@ -41,9 +41,9 @@ class StringCalculatorTest {
         @Test
         @DisplayName("빈 문자열 -> 0 반환")
         public void emptyTest() {
-            text = "";
+            str = "";
 
-            int result = strCal.add(text);
+            int result = strCal.parseNonNegativeInteger(str);
             assertThat(result).isEqualTo(0);
         }
 
@@ -51,15 +51,15 @@ class StringCalculatorTest {
         @ValueSource(strings = {" ", "  ", "   ", "    ", "     "})
         @DisplayName("공백 문자열 -> 0 반환")
         public void blankTest(String text) {
-            int result = strCal.add(text);
+            int result = strCal.parseNonNegativeInteger(text);
             assertThat(result).isEqualTo(0);
         }
 
         @ParameterizedTest
         @ValueSource(strings = {"0", "1", "3", "5", "15", "65535", "2147483647"})
-        @DisplayName("0 또는 양의 정수 -> 같은 값 반환")
-        public void zeroTest(String text) {
-            int result = strCal.add(text);
+        @DisplayName("0 또는 양의 정수 문자열 -> 같은 값 반환")
+        public void nonNegativeNumberTest(String text) {
+            int result = strCal.parseNonNegativeInteger(text);
             int expect = Integer.parseInt(text);
 
             assertThat(result).isEqualTo(expect);
