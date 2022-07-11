@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 @DisplayName("StringCalculator의")
 class StringCalculatorTest {
@@ -53,6 +53,14 @@ class StringCalculatorTest {
         public void blankTest(String text) {
             int result = strCal.parseNonNegativeInteger(text);
             assertThat(result).isEqualTo(0);
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {"ㅁㄴㅇㄹ", "!2ㅏㅁㅇ람ㄹ", "asdfadf", "332d짱29-"})
+        @DisplayName("형식에 맞지 않는 문자열 -> NumberFormatException 발생")
+        public void badFormatTest(String str) {
+            assertThatThrownBy(() -> strCal.parseNonNegativeInteger(str))
+                    .isInstanceOf(NumberFormatException.class);
         }
 
         @ParameterizedTest
