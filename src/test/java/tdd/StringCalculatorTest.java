@@ -4,6 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -45,13 +47,22 @@ class StringCalculatorTest {
             assertThat(result).isEqualTo(0);
         }
 
-        @Test
+        @ParameterizedTest
+        @ValueSource(strings = {" ", "  ", "   ", "    ", "     "})
         @DisplayName("공백 문자열 -> 0 반환")
-        public void blankTest() {
-            text = "   ";
-
+        public void blankTest(String text) {
             int result = strCal.add(text);
             assertThat(result).isEqualTo(0);
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {"0", "1", "3", "5", "15", "65535", "2147483647"})
+        @DisplayName("0 또는 양의 정수 -> 같은 값 반환")
+        public void zeroTest(String text) {
+            int result = strCal.add(text);
+            int expect = Integer.parseInt(text);
+
+            assertThat(result).isEqualTo(expect);
         }
     }
 
