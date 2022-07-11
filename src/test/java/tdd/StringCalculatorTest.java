@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.*;
 
 @DisplayName("StringCalculator의")
@@ -82,4 +84,81 @@ class StringCalculatorTest {
         }
     }
 
+    @Nested
+    @DisplayName("splitWords 메서드는")
+    class test_splitWords {
+
+        @Test
+        @DisplayName("null -> 빈 리스트 반환")
+        public void nullTest() {
+            //given
+            String str = null;
+
+            //when
+            List<String> result = strCal.splitWords(str);
+
+            //then
+            assertThat(result).isEmpty();
+        }
+
+        @Test
+        @DisplayName("빈 문자열 -> 빈 리스트 반환")
+        public void emptyTest() {
+            //given
+            String str = "";
+
+            //when
+            List<String> result = strCal.splitWords(str);
+
+            //then
+            assertThat(result).isEmpty();
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {" ", "  ", "   ", "     ", "      "})
+        @DisplayName("공백 문자열 -> 빈 리스트 반환")
+        public void blankTest(String str) {
+            //when
+            List<String> result = strCal.splitWords(str);
+
+            //then
+            assertThat(result).isEmpty();
+        }
+
+        @Test
+        @DisplayName("콤마(,)로 문자열을 분리")
+        public void commaTest() {
+            String str = "토끼,너구리,닭";
+
+            // when
+            List<String> result = strCal.splitWords(str);
+
+            // then
+            assertThat(result).containsExactlyInAnyOrder("토끼", "너구리", "닭");
+        }
+
+        @Test
+        @DisplayName("콜론(:)으로 문자열을 분리")
+        public void colonTest() {
+            String str = "가:나:다";
+
+            // when
+            List<String> result = strCal.splitWords(str);
+
+            // then
+            assertThat(result).containsExactlyInAnyOrder("가", "나", "다");
+        }
+
+        @Test
+        @DisplayName("콤마(,) 또는 콜론(:)로 문자열을 분리")
+        public void commaAndColonTest() {
+            String str = "가,나:다";
+
+            // when
+            List<String> result = strCal.splitWords(str);
+
+            // then
+            assertThat(result).containsExactlyInAnyOrder("가", "나", "다");
+        }
+    }
 }
