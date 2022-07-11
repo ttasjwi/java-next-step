@@ -1,8 +1,13 @@
 package tdd;
 
+import java.util.Objects;
+
 public class StringCalculator {
 
     public int add(String text) {
-        return 0;
+        if (Objects.isNull(text) || text.isBlank()) {
+            return 0;
+        }
+        return Integer.parseInt(text);
     }
 }
