@@ -2,9 +2,7 @@
 
 책 [자바 웹 프로그래밍 NextStep - 박재성](http://www.yes24.com/Product/goods/31869154?scode=032&OzSrank=4) 스터디를 위한 저장소입니다.
 
-
 ---
-
 
 ### 🎙 진행 방식
 
@@ -25,4 +23,31 @@
 
 ---
 
-[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FNext-Squad%2FNext-Step&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
+### 📌 Commit Convention
+
+```
+[ttasjwi#이슈번호] Type: 커밋 제목 
+
+커밋에 대한 설명
+```
+
+| Type             | Description                                                                                       |
+| ---------------- | ------------------------------------------------------------------------------------------------- |
+| Init             | 초기화                                                                                            |
+| Feat             | 새로운 기능 추가                                                                                  |
+| Fix              | 버그 수정                                                                                         |
+| Docs             | 문서 작업, 수정                                                                                   |
+| Refactor         | 코드 리팩토링                                                                                     |
+| Style            | 코드 스타일 및 포맷 변경(코드 자체의 변경은 없는 경우, 함수/ 변수명 변경 포함)                    |
+| Test             | 테스트 코드 작성, 테스트 리팩토링(프로덕션 코드 변경 X)                                           |
+| Chore            | 소스 코드를 건들지 않는 작업 - 빌드 테스트 업데이트, 패키지 매니저를 설정하는 경우(ex: gitignore) |
+| Design           | CSS 등 UI 디자인 변경                                                                             |
+| Ci               | CI 관련 설정 수정                                                                                 |
+| Rename           | 파일 혹은 폴더명을 수정하거나 옮기는 작업만 수행                                                  |
+| Remove           | 파일을 삭제하는 작업만 수행                                                                       |
+| Comment          | 필요한 주석 추가 및 변경                                                                          |
+| Build            | 빌드 관련 파일 수정                                                                               |
+| !BREAKING CHANGE | 커다란 API 변경                                                                                   |
+| !HOTFIX          | 급하게 치명적인 버그를 고쳐야 하는 경우                                                           |
+
+---
