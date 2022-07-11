@@ -72,6 +72,14 @@ class StringCalculatorTest {
 
             assertThat(result).isEqualTo(expect);
         }
+
+        @ParameterizedTest
+        @ValueSource(strings = {"-1", "-3", "-5", "-27", "-65535", "-2147483647"})
+        @DisplayName("음의 정수 문자열 -> RuntimeException 발생")
+        public void negativeNumberTest(String str) {
+            assertThatThrownBy(() -> strCal.parseNonNegativeInteger(str))
+                    .isInstanceOf(RuntimeException.class);
+        }
     }
 
 }
