@@ -161,6 +161,38 @@ class StringCalculatorTest {
             // then
             assertThat(result).containsExactlyInAnyOrder("가", "나", "다");
         }
+
+        @Nested
+        @DisplayName("맨 앞에 //문자\\n을 지정하여 커스텀 구분자 설정이 가능하다.")
+        class customDelimiterTest {
+
+            @Test
+            @DisplayName("\"//!\\n...\" 지정 -> \"!\"로 문자열을 분리")
+            public void exclamationMarkTest() {
+                String str = "//!\n가!나!다";
+
+                // when
+                List<String> result = strCal.splitWords(str);
+
+                // then
+                assertThat(result).containsExactlyInAnyOrder("가", "나", "다");
+            }
+
+            @Test
+            @DisplayName("\"//;\\n...\" 지정 -> \";\"로 문자열을 분리")
+            public void questionMarkTest() {
+                String str = "//;\n가;나;다";
+
+                // whe
+                List<String> result = strCal.splitWords(str);
+
+                // then
+                assertThat(result).containsExactlyInAnyOrder("가", "나", "다");
+            }
+
+
+        }
+
     }
 
     @Nested
