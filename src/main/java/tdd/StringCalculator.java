@@ -14,6 +14,21 @@ public class StringCalculator {
     private static final Pattern CUSTOM_DELIMITER_MATCHING_PATTERN = Pattern.compile("//(.)\n(.*)");
 
     /**
+     * 문자열을 읽고 쪼갠 뒤, 그 합을 반환함
+     */
+    public int sum(String text) {
+        if (Objects.isNull(text) || text.isBlank()) {
+            return 0;
+        }
+        List<String> splitWords = splitWords(text);
+        List<Integer> numbers = parseNonNegativeIntegers(splitWords);
+
+        return numbers.stream()
+                .mapToInt(Integer::intValue)
+                .sum();
+    }
+
+    /**
      * 문자열 리스트가 주어질 때 각각을 음이 아닌 정수로 파싱
      * 1. 빈 문자열 요소, 공백문자열 요소, null 요소는 0으로 파싱
      * 2. null -> 빈 리스트 반환
