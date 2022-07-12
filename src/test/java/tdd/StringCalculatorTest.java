@@ -293,4 +293,107 @@ class StringCalculatorTest {
         }
 
     }
+
+    @Nested
+    @DisplayName("sum 메서드는 문자열을 읽고 쪼개서 그 합을 반환한다.")
+    class test_sum {
+
+        @Test
+        @DisplayName("콤마(,)로 구분되있을 경우 그 합을 반환")
+        public void commaSplitTest() {
+            //given
+            String text = "1,2,3,4,5";
+
+            //when
+            int sum = strCal.sum(text);
+
+            //then
+            int expect = 1+2+3+4+5;
+            assertThat(sum).isEqualTo(expect);
+        }
+
+        @Test
+        @DisplayName("콜론(:)로 구분되있을 경우 그 합을 반환")
+        public void colonSplitTest() {
+            //given
+            String text = "1:2:3:4:5";
+
+            //when
+            int sum = strCal.sum(text);
+
+            //then
+            int expect = 1+2+3+4+5;
+            assertThat(sum).isEqualTo(expect);
+        }
+
+        @Test
+        @DisplayName("하나라도 음수가 있는 문자열 -> RuntimeException 발생")
+        public void negativeIntegerContains_Test() {
+            //given
+            String text = "-1,0,1,2,3";
+
+            //when & then
+            assertThatThrownBy(() -> strCal.sum(text))
+                    .isInstanceOf(RuntimeException.class);
+        }
+
+        @Test
+        @DisplayName("null -> 0 반환")
+        public void nullTest() {
+            //given
+            String text = null;
+
+            //when
+            int sum = strCal.sum(text);
+
+            //then
+            int expect = 0;
+            assertThat(sum).isEqualTo(expect);
+        }
+
+        @Test
+        @DisplayName("빈 문자열 -> 0 반환")
+        public void emptyTest() {
+            //given
+            String text = "";
+
+            //when
+            int sum = strCal.sum(text);
+
+            //then
+            int expect = 0;
+            assertThat(sum).isEqualTo(expect);
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {" ", "  ", "   ", "    ", "     "})
+        @DisplayName("공백 문자열 -> 0 반환")
+        public void blankTest(String text) {
+            //when
+            int sum = strCal.sum(text);
+
+            //then
+            int expect = 0;
+            assertThat(sum).isEqualTo(expect);
+        }
+
+        @Nested
+        @DisplayName("커스텀 문자열로 구분되있을 경우 그 합을 반환")
+        class customDelimiterTest {
+
+            @Test
+            @DisplayName("세미콜론(;)을 커스텀 문자열로 지정 -> 그 합 반환")
+            public void semicolonTest() {
+                // given
+                String text = "//;\n1;2;3;4;5";
+
+                // when
+                int sum = strCal.sum(text);
+
+                // then
+                int expect = 1+2+3+4+5;
+                assertThat(sum).isEqualTo(expect);
+            }
+        }
+    }
 }
