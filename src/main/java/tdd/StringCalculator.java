@@ -11,15 +11,15 @@ import java.util.stream.Collectors;
 public class StringCalculator {
 
     private static final String DEFAULT_DELIMITER = "[,:]";
-        public static final Pattern CUSTOM_DELIMITER_MATCHING_PATTERN = Pattern.compile("//(.)\n(.*)");
+    private static final Pattern CUSTOM_DELIMITER_MATCHING_PATTERN = Pattern.compile("//(.)\n(.*)");
 
     /**
      * 문자열 리스트가 주어질 때 각각을 음이 아닌 정수로 파싱
-     *  1. 빈 문자열 요소, 공백문자열 요소, null 요소는 0으로 파싱
-     *  2. null -> 빈 리스트 반환
-     *  3. 빈 리스트 -> 빈 리스트 반환
-     *  4. 하나라도 형식에 안 맞으면 NumberFormatException 발생
-     *  5. 하나라도 음수면 RuntimeException 발생
+     * 1. 빈 문자열 요소, 공백문자열 요소, null 요소는 0으로 파싱
+     * 2. null -> 빈 리스트 반환
+     * 3. 빈 리스트 -> 빈 리스트 반환
+     * 4. 하나라도 형식에 안 맞으면 NumberFormatException 발생
+     * 5. 하나라도 음수면 RuntimeException 발생
      */
     public List<Integer> parseNonNegativeIntegers(List<String> strs) {
         if (Objects.isNull(strs)) {
@@ -44,12 +44,25 @@ public class StringCalculator {
         Matcher matcher = CUSTOM_DELIMITER_MATCHING_PATTERN.matcher(text);
 
         if (matcher.find()) {
-            String customDelimiter = matcher.group(1);
-            String words = matcher.group(2);
-            return Arrays.stream(words.split(customDelimiter))
-                    .collect(Collectors.toList());
+            return splitWordsByCustomDelimiter(matcher);
         }
+        return splitWordsByDefaultDelimiter(text);
+    }
 
+    /**
+     * 커스텀 구분자를 찾았을 경우, 커스텀 구분자로 단어를 쪼갬
+     */
+    private List<String> splitWordsByCustomDelimiter(Matcher matcher) {
+        String customDelimiter = matcher.group(1);
+        String words = matcher.group(2);
+        return Arrays.stream(words.split(customDelimiter))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 커스텀 구분자를 찾지 못 할 경우, 디폴트 구분자로 단어를 쪼갬
+     */
+    private List<String> splitWordsByDefaultDelimiter(String text) {
         return Arrays.stream(text.split(DEFAULT_DELIMITER))
                 .collect(Collectors.toList());
     }
