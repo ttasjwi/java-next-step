@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class StringCalculator {
 
-    private static final String DEFAULT_WORD_SPLIT_DELIMITER = "[,:]";
+    private static final String DEFAULT_DELIMITER = "[,:]";
+        public static final Pattern CUSTOM_DELIMITER_MATCHING_PATTERN = Pattern.compile("//(.)\n(.*)");
 
     /**
      * 문자열 리스트가 주어질 때 각각을 음이 아닌 정수로 파싱
@@ -33,11 +36,21 @@ public class StringCalculator {
      * - 디폴트 : , 또는 :로 분리
      * - //문자\n : 지정 문자로 분리
      */
-    public List<String> splitWords(String str) {
-        if (Objects.isNull(str) || str.isBlank()) {
+    public List<String> splitWords(String text) {
+        if (Objects.isNull(text) || text.isBlank()) {
             return new ArrayList<>();
         }
-        return Arrays.stream(str.split(DEFAULT_WORD_SPLIT_DELIMITER))
+
+        Matcher matcher = CUSTOM_DELIMITER_MATCHING_PATTERN.matcher(text);
+
+        if (matcher.find()) {
+            String customDelimiter = matcher.group(1);
+            String words = matcher.group(2);
+            return Arrays.stream(words.split(customDelimiter))
+                    .collect(Collectors.toList());
+        }
+
+        return Arrays.stream(text.split(DEFAULT_DELIMITER))
                 .collect(Collectors.toList());
     }
 
