@@ -13,8 +13,18 @@ import java.util.concurrent.atomic.AtomicLong;
 @Slf4j
 public class MemberRepository {
 
+    private static MemberRepository singletonInstance;
+
     private final Map<Long, Member> store = Maps.newHashMap();
     private final AtomicLong sequence = new AtomicLong();
+
+    public static MemberRepository getSingletonInstance() {
+        if (singletonInstance == null) {
+            singletonInstance = new MemberRepository();
+            return singletonInstance;
+        }
+        return singletonInstance;
+    }
 
     /**
      * 회원 저장
