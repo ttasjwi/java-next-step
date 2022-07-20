@@ -166,5 +166,22 @@ public class HttpRequestUtilsTest {
         Pair<String, String> pair = HttpRequestUtils.parseHeader(header);
         assertThat(pair).isEqualTo(new Pair<>("Content-Length", "59"));
     }
-    
+
+    @Nested
+    @DisplayName("decodeURLEncoding 메서드는")
+    class decodeURLEncodingTest {
+        //given
+        String urlEncodedString = "userId=%EB%95%83%EB%95%83%EB%95%83";
+
+        @Test
+        @DisplayName("URL 인코딩 문자열을 UTF-8로 디코딩할 수 있어야 한다.")
+        public void it_decode_urlEncodedString_to_utf8_string() {
+            //when
+            String decodedString = HttpRequestUtils.decodeURLEncoding(urlEncodedString);
+
+            //then
+            assertThat(decodedString).isEqualTo("userId=땃땃땃");
+        }
+    }
+
 }
