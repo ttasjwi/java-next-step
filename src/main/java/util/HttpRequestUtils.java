@@ -56,8 +56,10 @@ public class HttpRequestUtils {
         if (tokens.length != 2) {
             return null;
         }
+        String key = tokens[0].trim();
+        String value = tokens[1].trim();
 
-        return new Pair(tokens[0], tokens[1]);
+        return new Pair(key, value);
     }
 
     public static Pair parseHeader(String header) {
@@ -69,8 +71,8 @@ public class HttpRequestUtils {
         String value;
 
         Pair(String key, String value) {
-            this.key = key.trim();
-            this.value = value.trim();
+            this.key = key;
+            this.value = value;
         }
 
         public String getKey() {
