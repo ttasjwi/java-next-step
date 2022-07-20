@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Objects;
 
+import http.request.RequestLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,13 +36,10 @@ public class RequestHandler extends Thread {
             }
 
             // RequestLine 읽기
-            String[] requestLineToken = line.split(REQUEST_LINE_DELIMITER);
-            String method = requestLineToken[0];
-            String url = requestLineToken[1];
-            String protocol = requestLineToken[2];
+            RequestLine requestLine = RequestLine.of(line);
+            String url = requestLine.getUrl();
 
-            log.debug("Request Line : {}", line);
-            log.debug("Request Line Split ---> method : {}, url : {}, protocol = {}", method, url, protocol);
+            log.debug("Request Line : {}", requestLine);
 
             // 요청 헤더들을 마지막까지 읽기
             while (!(line = br.readLine()).isEmpty()) {
