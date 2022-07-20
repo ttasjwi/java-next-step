@@ -15,13 +15,13 @@ public class RequestLine {
     private static final String REQUEST_LINE_DELIMITER = " +";
     private static final String QUESTION_MARK = "?";
 
-    private final String method;
+    private final HttpMethod method;
     private final String url;
     private final String protocol;
     private final Map<String, String> queryParameters = new HashMap<>();
 
     @Builder
-    public RequestLine(String method, String url, String protocol, Map<String, String> queryParameters) {
+    public RequestLine(HttpMethod method, String url, String protocol, Map<String, String> queryParameters) {
         this.method = method;
         this.url = url;
         this.protocol = protocol;
@@ -35,7 +35,7 @@ public class RequestLine {
         String decodedString = HttpRequestUtils.decodeURLEncoding(requestLineString);
         
         String[] requestLineTokens = decodedString.split(REQUEST_LINE_DELIMITER);
-        String method = requestLineTokens[0];
+        HttpMethod method = HttpMethod.valueOf(requestLineTokens[0]);
         String url = requestLineTokens[1];
         String queryString = "";
         String protocol = requestLineTokens[2];

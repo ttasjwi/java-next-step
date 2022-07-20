@@ -22,10 +22,10 @@ public class RequestLineTest {
         RequestLine requestLine = RequestLine.of(requestLineString);
 
         // when
-        String method = requestLine.getMethod();
+        HttpMethod method = requestLine.getMethod();
 
         // then
-        assertThat(method).isEqualTo("GET");
+        assertThat(method).isSameAs(HttpMethod.GET);
     }
 
     @Test
@@ -36,10 +36,10 @@ public class RequestLineTest {
         RequestLine requestLine = RequestLine.of(requestLineString);
 
         // when
-        String method = requestLine.getMethod();
+        HttpMethod method = requestLine.getMethod();
 
         // then
-        assertThat(method).isEqualTo("POST");
+        assertThat(method).isEqualTo(HttpMethod.POST);
     }
 
     @Test
