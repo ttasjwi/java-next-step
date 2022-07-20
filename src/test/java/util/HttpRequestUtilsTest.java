@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import util.HttpRequestUtils.Pair;
 
 import java.util.Map;
 
@@ -135,7 +134,7 @@ public class HttpRequestUtilsTest {
             String regex = "=";
 
             // when
-            Pair pair = HttpRequestUtils.getKeyValue(keyValue, regex);
+            Pair<String, String> pair = HttpRequestUtils.getKeyValue(keyValue, regex);
 
             // then
             SoftAssertions softAssertions = new SoftAssertions();
@@ -147,7 +146,7 @@ public class HttpRequestUtilsTest {
         @Test
         @DisplayName("형식에 맞지 않을 경우 null 반환")
         public void invalidKeyValue_make_null() {
-            Pair pair = HttpRequestUtils.getKeyValue("userId", "=");
+            Pair<String, String> pair = HttpRequestUtils.getKeyValue("userId", "=");
             assertThat(pair).isNull();
         }
     }
@@ -164,7 +163,8 @@ public class HttpRequestUtilsTest {
     @Test
     public void parseHeader() throws Exception {
         String header = "Content-Length: 59";
-        Pair pair = HttpRequestUtils.parseHeader(header);
-        assertThat(pair).isEqualTo(new Pair("Content-Length", "59"));
+        Pair<String, String> pair = HttpRequestUtils.parseHeader(header);
+        assertThat(pair).isEqualTo(new Pair<>("Content-Length", "59"));
     }
+    
 }
