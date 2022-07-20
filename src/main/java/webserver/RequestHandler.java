@@ -3,12 +3,16 @@ package webserver;
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class RequestHandler extends Thread {
+
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
+
+    private static final String REQUEST_LINE_DELIMITER = " +";
 
     private Socket connection;
 
@@ -23,7 +27,24 @@ public class RequestHandler extends Thread {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
 
-            // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
+            String line = br.readLine();
+
+            if (Objects.isNull(line)) {
+                return;
+            }
+
+            // TODO 1. RequestLine 읽기
+            String[] requestLineToken = line.split(REQUEST_LINE_DELIMITER);
+            String method = requestLineToken[0];
+            String url = requestLineToken[1];
+            String protocol = requestLineToken[2];
+
+            log.debug("Request Line : {}", line);
+            log.debug("Request Line Split ---> method : {}, url : {}, protocol = {}", method, url, protocol);
+
+            // TODO 2. 요청 헤더들을 마지막까지 읽기
+
+            // TODO 3. 요청을 분석하고 응답하기
             DataOutputStream dos = new DataOutputStream(out);
             byte[] body = "Hello World".getBytes();
             response200Header(dos, body.length);
