@@ -43,6 +43,9 @@ public class RequestHandler extends Thread {
             log.debug("Request Line Split ---> method : {}, url : {}, protocol = {}", method, url, protocol);
 
             // TODO 2. 요청 헤더들을 마지막까지 읽기
+            while (!(line = br.readLine()).isEmpty()) {
+                log.debug("Request Header/ {}", line);
+            }
 
             // TODO 3. 요청을 분석하고 응답하기
             DataOutputStream dos = new DataOutputStream(out);
