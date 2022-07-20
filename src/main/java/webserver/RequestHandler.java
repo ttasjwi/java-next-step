@@ -3,6 +3,7 @@ package webserver;
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Objects;
 
 import org.slf4j.Logger;
@@ -33,7 +34,7 @@ public class RequestHandler extends Thread {
                 return;
             }
 
-            // TODO 1. RequestLine 읽기
+            // RequestLine 읽기
             String[] requestLineToken = line.split(REQUEST_LINE_DELIMITER);
             String method = requestLineToken[0];
             String url = requestLineToken[1];
@@ -42,14 +43,14 @@ public class RequestHandler extends Thread {
             log.debug("Request Line : {}", line);
             log.debug("Request Line Split ---> method : {}, url : {}, protocol = {}", method, url, protocol);
 
-            // TODO 2. 요청 헤더들을 마지막까지 읽기
+            // 요청 헤더들을 마지막까지 읽기
             while (!(line = br.readLine()).isEmpty()) {
                 log.debug("Request Header/ {}", line);
             }
 
-            // TODO 3. 요청을 분석하고 응답하기
+            // 요청을 분석하고 응답하기
             DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = "Hello World".getBytes();
+            byte[] body = Files.readAllBytes(new File("./webapp" + url). toPath());
             response200Header(dos, body.length);
             responseBody(dos, body);
         } catch (IOException e) {
