@@ -1,8 +1,8 @@
-package db;
+package member.repository;
 
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
-import model.Member;
+import member.domain.Member;
 
 import java.util.ArrayList;
 import java.util.List;
