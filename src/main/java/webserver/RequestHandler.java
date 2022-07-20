@@ -1,19 +1,16 @@
 package webserver;
 
-import java.io.*;
-import java.net.Socket;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.util.Objects;
-
 import exception.HttpRequestMessageException;
-import exception.NullRequestLineException;
 import http.request.HttpMethod;
-import http.request.RequestLine;
+import http.request.HttpRequest;
 import member.dto.MemberJoinRequestDto;
 import member.service.MemberService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.net.Socket;
+import java.nio.file.Files;
 
 public class RequestHandler extends Thread {
 
@@ -35,18 +32,8 @@ public class RequestHandler extends Thread {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-
-            // RequestLine 읽기
-            RequestLine requestLine = readRequestLine(br);
-            log.debug("Request Line : {}", requestLine);
-
-            // 요청 헤더들을 마지막까지 읽기
-            String requestHeader;
-            while (!(requestHeader = br.readLine()).isEmpty()) {
-                log.debug("Request Header/ {}", requestHeader);
-            }
-            sendResponse(requestLine, out);
+            HttpRequest request = HttpRequest.of(in);
+            sendResponse(request, out);
         } catch (IOException e) {
             log.error(e.getMessage());
         } catch (HttpRequestMessageException me) {
@@ -54,14 +41,14 @@ public class RequestHandler extends Thread {
         }
     }
 
-    private void sendResponse(RequestLine requestLine, OutputStream out) throws IOException {
+    private void sendResponse(HttpRequest request, OutputStream out) throws IOException {
         // 요청을 분석하고 응답하기
-        String url = requestLine.getUrl();
-        HttpMethod method = requestLine.getMethod();
+        String url = request.getUrl();
+        HttpMethod method = request.getMethod();
 
-        if (url.equals("/members/create") && method == HttpMethod.GET) {
+        if (url.equals("/members/create") && method == HttpMethod.POST) {
             log.info("회원 가입 요청");
-            joinMember(requestLine);
+            joinMember(request);
         }
         DataOutputStream dos = new DataOutputStream(out);
         byte[] body = Files.readAllBytes(new File("./webapp" + url).toPath());
@@ -69,24 +56,15 @@ public class RequestHandler extends Thread {
         responseBody(dos, body);
     }
 
-    private void joinMember(RequestLine requestLine) {
+    private void joinMember(HttpRequest request) {
         MemberJoinRequestDto memberJoinRequestDto = MemberJoinRequestDto.builder()
-                .loginId(requestLine.getParameter("loginId"))
-                .password(requestLine.getParameter("password"))
-                .name(requestLine.getParameter("name"))
-                .email(requestLine.getParameter("email"))
+                .loginId(request.getParameter("loginId"))
+                .password(request.getParameter("password"))
+                .name(request.getParameter("name"))
+                .email(request.getParameter("email"))
                 .build();
 
         memberService.join(memberJoinRequestDto);
-    }
-
-    private RequestLine readRequestLine(BufferedReader br) throws IOException {
-        String requestLineString = br.readLine();
-
-        if (Objects.isNull(requestLineString)) {
-            throw new NullRequestLineException();
-        }
-        return RequestLine.of(requestLineString);
     }
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
