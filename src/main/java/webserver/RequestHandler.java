@@ -6,6 +6,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Objects;
 
+import exception.HttpRequestMessageException;
+import exception.NullRequestLineException;
 import http.request.RequestLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,21 +31,16 @@ public class RequestHandler extends Thread {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
 
-            String line = br.readLine();
-
-            if (Objects.isNull(line)) {
-                return;
-            }
-
             // RequestLine 읽기
-            RequestLine requestLine = RequestLine.of(line);
+            RequestLine requestLine = readRequestLine(br);
             String url = requestLine.getUrl();
-
             log.debug("Request Line : {}", requestLine);
 
+            String requestHeader;
+
             // 요청 헤더들을 마지막까지 읽기
-            while (!(line = br.readLine()).isEmpty()) {
-                log.debug("Request Header/ {}", line);
+            while (!(requestHeader = br.readLine()).isEmpty()) {
+                log.debug("Request Header/ {}", requestHeader);
             }
 
             // 요청을 분석하고 응답하기
@@ -53,7 +50,18 @@ public class RequestHandler extends Thread {
             responseBody(dos, body);
         } catch (IOException e) {
             log.error(e.getMessage());
+        } catch (HttpRequestMessageException me) {
+            log.error(me.getMessage());
         }
+    }
+
+    private RequestLine readRequestLine(BufferedReader br) throws IOException {
+        String requestLineString = br.readLine();
+
+        if (Objects.isNull(requestLineString)) {
+            throw new NullRequestLineException();
+        }
+        return RequestLine.of(requestLineString);
     }
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
