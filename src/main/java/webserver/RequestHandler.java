@@ -50,13 +50,12 @@ public class RequestHandler extends Thread {
         HttpMethod method = request.getMethod();
 
         if (url.equals("/members/create") && method == HttpMethod.POST) {
-            log.info("회원 가입 요청");
-            joinMember(request);
+            joinMember(request, response);
         }
         response.responseStaticResource(url);
     }
 
-    private void joinMember(HttpRequest request) {
+    private void joinMember(HttpRequest request, HttpResponse response) throws IOException {
         MemberJoinRequestDto memberJoinRequestDto = MemberJoinRequestDto.builder()
                 .loginId(request.getParameter("loginId"))
                 .password(request.getParameter("password"))
@@ -65,6 +64,8 @@ public class RequestHandler extends Thread {
                 .build();
 
         memberService.join(memberJoinRequestDto);
+
+        response.redirectTo("/index.html");
     }
 
 }

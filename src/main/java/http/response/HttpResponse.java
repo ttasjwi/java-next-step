@@ -32,4 +32,10 @@ public class HttpResponse {
         dos.write(body, 0, body.length);
         dos.flush();
     }
+
+    public void redirectTo(String redirectUrl) throws IOException {
+        dos.writeBytes("HTTP/1.1 302 Found \r\n");
+        dos.writeBytes("Location: " + redirectUrl + "\r\n");
+        dos.writeBytes("\r\n");
+    }
 }
