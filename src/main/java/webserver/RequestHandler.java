@@ -1,6 +1,7 @@
 package webserver;
 
 import exception.HttpRequestMessageException;
+import exception.MemberJoinFailedException;
 import http.request.HttpMethod;
 import http.request.HttpRequest;
 import http.response.HttpResponse;
@@ -63,9 +64,13 @@ public class RequestHandler extends Thread {
                 .email(request.getParameter("email"))
                 .build();
 
-        memberService.join(memberJoinRequestDto);
-
-        response.redirectTo("/index.html");
+        try {
+            memberService.join(memberJoinRequestDto);
+            response.redirectTo("/index.html");
+        } catch (MemberJoinFailedException mje) {
+            log.error(mje.getMessage());
+            response.redirectTo("/members/form.html");
+        }
     }
 
 }

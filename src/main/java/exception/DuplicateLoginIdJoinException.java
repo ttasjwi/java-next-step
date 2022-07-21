@@ -1,5 +1,5 @@
 package exception;
 
-public class DuplicateLoginIdJoinException extends BusinessException {
+public class DuplicateLoginIdJoinException extends MemberJoinFailedException {
 
 }
