@@ -52,6 +52,7 @@ public class RequestHandler extends Thread {
 
         if (url.equals("/members/create") && method == HttpMethod.POST) {
             joinMember(request, response);
+            return;
         }
         response.responseStaticResource(url);
     }
