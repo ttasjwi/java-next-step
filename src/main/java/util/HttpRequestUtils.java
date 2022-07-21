@@ -1,13 +1,14 @@
 package util;
 
+import com.google.common.base.Strings;
+import com.google.common.collect.Maps;
+import http.common.Cookie;
+
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import com.google.common.base.Strings;
-import com.google.common.collect.Maps;
 
 public class HttpRequestUtils {
 
@@ -33,8 +34,13 @@ public class HttpRequestUtils {
      *            값은 name1=value1; name2=value2 형식임
      * @return
      */
-    public static Map<String, String> parseCookies(String cookies) {
-        return parseValues(cookies, ";");
+    public static Map<String, Cookie> parseCookies(String cookies) {
+        return parseValues(cookies, ";").entrySet()
+                .stream()
+                .collect(Collectors.toMap(
+                        entry -> entry.getKey(),
+                        entry -> new Cookie(entry.getKey(), entry.getValue())
+                ));
     }
 
     private static Map<String, String> parseValues(String values, String separator) {

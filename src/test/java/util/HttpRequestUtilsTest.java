@@ -1,5 +1,6 @@
 package util;
 
+import http.common.Cookie;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -151,15 +152,38 @@ public class HttpRequestUtilsTest {
         }
     }
 
-    @Test
-    public void parseCookies() {
-        String cookies = "logined=true; JSessionId=1234";
-        Map<String, String> parameters = HttpRequestUtils.parseCookies(cookies);
-        assertThat(parameters.get("logined")).isEqualTo("true");
-        assertThat(parameters.get("JSessionId")).isEqualTo("1234");
-        assertThat(parameters.get("session")).isNull();
-    }
+    @Nested
+    @DisplayName("parseCookies 메서드로 얻은 쿠키 목록에서는")
+    class parseCookiesTest {
 
+        String cookieString = "logined=true; JSessionId=1234";
+        @Test
+        @DisplayName("갯수가 맞게 쿠키가 반환되어야 한다.")
+        public void cookieCountTest() {
+            // when
+            Map<String, Cookie> cookies = HttpRequestUtils.parseCookies(cookieString);
+
+            //then
+            assertThat(cookies.size()).isEqualTo(2);
+        }
+
+        @Test
+        @DisplayName("올바른 쿠키들이 반환되어야 한다.")
+        public void it_returns_right_cookies() {
+            // when
+            Map<String, Cookie> cookies = HttpRequestUtils.parseCookies(cookieString);
+
+            // then
+            Cookie loginedCookie = cookies.get("logined");
+            Cookie jSessionIdCookie = cookies.get("JSessionId");
+
+            SoftAssertions softAssertions = new SoftAssertions();
+            softAssertions.assertThat(loginedCookie.getValue()).isEqualTo("true");
+            softAssertions.assertThat(jSessionIdCookie.getValue()).isEqualTo("1234");
+            softAssertions.assertAll();
+        }
+
+    }
     @Test
     public void parseHeader() throws Exception {
         String header = "Content-Length: 59";
