@@ -1,6 +1,7 @@
 package http.request;
 
 import exception.NullRequestLineException;
+import http.common.Cookie;
 import lombok.extern.slf4j.Slf4j;
 import util.HttpRequestUtils;
 import util.IOUtils;
@@ -105,5 +106,19 @@ public class HttpRequest {
 
     public String getParameter(String key) {
         return parameters.get(key);
+    }
+
+    public String getHeader(String key) {
+        return headers.get(key);
+    }
+    public Map<String, Cookie> getCookies() {
+        Map<String, Cookie> cookies = new HashMap<>();
+        String cookiesString = getHeader("Cookie");
+        cookies.putAll(HttpRequestUtils.parseCookies(cookiesString));
+        return cookies;
+    }
+    public Cookie getCookie(String key) {
+        Map<String, Cookie> cookies = getCookies();
+        return cookies.get(key);
     }
 }
